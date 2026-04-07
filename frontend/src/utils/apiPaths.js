@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const BASE = import.meta.env.VITE_API_BASE_URL || "https://night-coding-marathon-3.onrender.com";
 
 const BASE_URL = `${BASE}/api`;
 
