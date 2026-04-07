@@ -14,7 +14,8 @@ const generateToken = (userId) => {
 // @access  Public
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, profileImageUrl } = req.body;
+    console.log("BODY:", req.body);
+    const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res
@@ -34,15 +35,13 @@ export const registerUser = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
-      profileImageUrl: profileImageUrl || null,
+      password: hashedPassword
     });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      profileImageUrl: user.profileImageUrl,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -53,23 +52,58 @@ export const registerUser = async (req, res) => {
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
+
+
+// export const loginUser = async (req, res) => {
+//   console.log("BODY:", req.body);
+//   try {
+//     const { email, password } = req.body;
+
+//     const user = await User.findOne({ email });
+
+//     if (user && (await bcrypt.compare(password, user.password))) {
+//       res.json({
+//         _id: user._id,
+//         name: user.name,
+//         email: user.email,
+//         token: generateToken(user._id)
+//       });
+//     } else {
+//       res.status(401).json({ message: "Invalid email or password" });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("BODY:", req.body);
 
+    // Check user
     const user = await User.findOne({ email });
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        profileImageUrl: user.profileImageUrl,
-        token: generateToken(user._id),
-      });
-    } else {
-      res.status(401).json({ message: "Invalid email or password" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
     }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // Generate token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

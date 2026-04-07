@@ -88,6 +88,7 @@ export const getMySessions = async (req, res) => {
 // @access  Private
 export const getSessionById = async (req, res) => {
   try {
+    console.log("Fetching session with ID:", req.params.id);
     const session = await Session.findById(req.params.id)
       .populate("questions")
       .populate("user", "name email");
