@@ -24,6 +24,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://night-coding-marathon-3.onrender.com",
   "https://night-coding-marathon-eight.vercel.app/"
 ];
 
