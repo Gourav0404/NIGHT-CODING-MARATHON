@@ -57,6 +57,9 @@ app.use(
   "/uploads",
   express.static(path.join(import.meta.dirname, "uploads"), {}),
 );
+app.get('/' , (req , res) =>{
+  res.send('backend is working :');
+});
 app.listen(process.env.PORT, (err) => {
   if (err) {
     console.log(err);
