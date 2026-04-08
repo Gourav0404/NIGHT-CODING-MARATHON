@@ -15,7 +15,7 @@ export default function Navbar() {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!token);
 
-  }, []);
+  }, [isLoggedIn]);
 
   // ✅ Logout function
   const handleLogout = () => {
