@@ -13,7 +13,7 @@ export default function Navbar() {
   // ✅ Check login
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!token);
+    setIsLoggedIn(!!token);
 
   }, []);
 
